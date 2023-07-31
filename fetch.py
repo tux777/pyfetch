@@ -2,7 +2,13 @@
 
 import platform
 import subprocess
-import os
+import os  
+
+try:
+   import distro
+except ModuleNotFoundError as err:
+    print(f"Module '{err.name}' was not found. Please install it with pip")
+    os._exit(0)
 
 # The dictionary above stores all info / optional info for fetch.
 # The dictonarily allows for flexibility and custom info added by the user
@@ -42,9 +48,9 @@ bold_colors = {
 def getInfo(name):
     
     # Get if system is either windows, linux or macos
-    system = platform.uname()
-    if system.system == "Darwin":
-        system.sysname = "MacOS"
+    osName = distro.name()
+    if osName == "Darwin":
+        osName = "MacOS"
     
     macosWMs = ["[c]hunkwm", "[K]wm", "[y]abai", "[A]methyst", "[S]pectacle", "[R]ectangle"]
     macosDefaultWM = "Quartz Compositor"
@@ -52,24 +58,23 @@ def getInfo(name):
 
     # Base Info
     if name == "Operating System":
-
-        if system.sysname == "MacOS":
-            return system.sysname + f" {platform.mac_ver()[0]}"
+        if osName == "MacOS":
+            return f"{osName} {platform.mac_ver()[0]}"
+        elif osName == "Windows":
+            return f"{osName} {platform.win32_ver()[0]}"
         else:
-            return system.sysname + f" {system.version}"
+            return f"{osName} {distro.version()}"
         
     elif name == "Hostname":
-
-        if system.sysname == "MacOS":
+        if osName == "MacOS":
             return subprocess.check_output("scutil --get ComputerName", shell=True, encoding='utf-8').strip()
-        elif system.sysname == "Linux":
+        elif osName == "Linux":
             return subprocess.check_output("cat /etc/hostname", shell=True, encoding='utf-8').strip()
-        elif system.sysname == "Windows":
+        elif osName == "Windows":
             return subprocess.check_output("powershell hostname", shell=True, encoding='utf-8').strip()
     
     elif name == "Window Manager":
-
-        if system.sysname == "MacOS":
+        if osName == "MacOS":
             counter = 0
             for wm in macosWMs:
                 counter+=1
@@ -85,20 +90,17 @@ def getInfo(name):
 
 
     elif name == "Shell":
-
         return os.getenv("SHELL")
 
     elif name == "CPU":
-
-        if system.sysname == "MacOS":
+        if osName == "MacOS":
             cpu_name = subprocess.check_output("sysctl machdep.cpu.brand_string", shell=True, encoding='utf-8').split()
             cpu_name = f"{cpu_name[1].split('(')[0]} {cpu_name[2].split('(')[0]} {cpu_name[3]} @ {cpu_name[6]}" 
             cores = subprocess.check_output("sysctl machdep.cpu.core_count", shell=True, encoding='utf-8').split()[1]
             return f"{cpu_name}"
 
     elif name == "GPU":
-        
-        if system.sysname == "MacOS":
+        if osName == "MacOS":
             gpuArray = subprocess.check_output("system_profiler SPDisplaysDataType | grep Chipset", shell=True, encoding='utf-8').split()
             vramArray = subprocess.check_output("system_profiler SPDisplaysDataType | grep VRAM", shell=True, encoding='utf-8').split()
             del gpuArray[0]
@@ -126,8 +128,7 @@ def getInfo(name):
             return gpu
     
     elif name == "RAM":
-        if system.sysname == "MacOS":
-                    
+        if osName == "MacOS": 
                     ramArray = subprocess.check_output("system_profiler SPHardwareDataType | grep Memory", shell=True, encoding='utf-8').split()
                     ramSize = ramArray[1]
                     ramMeasurement = ramArray[2]
