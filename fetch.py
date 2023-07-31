@@ -3,7 +3,6 @@
 import platform
 import subprocess
 import os
-from multiprocessing.pool import ThreadPool
 
 # The dictionary above stores all info / optional info for fetch.
 # The dictonarily allows for flexibility and custom info added by the user
