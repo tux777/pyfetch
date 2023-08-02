@@ -1,3 +1,4 @@
+#!/bin/python3
 # W.I.P.
 
 import platform
@@ -68,10 +69,10 @@ def getInfo(name):
     elif name == "Hostname":
         if osName == "MacOS":
             return subprocess.check_output("scutil --get ComputerName", shell=True, encoding='utf-8').strip()
-        elif osName == "Linux":
-            return subprocess.check_output("cat /etc/hostname", shell=True, encoding='utf-8').strip()
         elif osName == "Windows":
             return subprocess.check_output("powershell hostname", shell=True, encoding='utf-8').strip()
+        else:
+            return subprocess.check_output("cat /etc/hostname", shell=True, encoding='utf-8').strip()
     
     elif name == "Window Manager":
         if osName == "MacOS":
@@ -95,46 +96,67 @@ def getInfo(name):
     elif name == "CPU":
         if osName == "MacOS":
             cpu_name = subprocess.check_output("sysctl machdep.cpu.brand_string", shell=True, encoding='utf-8').split()
-            cpu_name = f"{cpu_name[1].split('(')[0]} {cpu_name[2].split('(')[0]} {cpu_name[3]} @ {cpu_name[6]}" 
-            cores = subprocess.check_output("sysctl machdep.cpu.core_count", shell=True, encoding='utf-8').split()[1]
             return f"{cpu_name}"
+        else:
+            cpu_name = subprocess.check_output("cat /proc/cpuinfo | grep 'model name' | tail -n 1", shell=True, encoding='utf-8').split()
+            del cpu_name[0]
+            del cpu_name[0]
+            del cpu_name[0]
+            
+
+            counter = 0
+            for i in cpu_name:
+                if counter == 0:
+                    cpu_name = i
+                else:
+                    cpu_name = f"{cpu_name} {i}"
+                counter+=1
+
+            return cpu_name
+            
+            
 
     elif name == "GPU":
         if osName == "MacOS":
-            gpuArray = subprocess.check_output("system_profiler SPDisplaysDataType | grep Chipset", shell=True, encoding='utf-8').split()
-            vramArray = subprocess.check_output("system_profiler SPDisplaysDataType | grep VRAM", shell=True, encoding='utf-8').split()
-            del gpuArray[0]
-            del gpuArray[0]
-            del vramArray[0]
-            del vramArray[0]
-            del vramArray[0]
+            gpu_name = subprocess.check_output("system_profiler SPDisplaysDataType | grep Chipset", shell=True, encoding='utf-8').split()
+            vram = subprocess.check_output("system_profiler SPDisplaysDataType | grep VRAM", shell=True, encoding='utf-8').split()
+            del gpu_name[0]
+            del gpu_name[0]
+            del vram[0]
+            del vram[0]
+            del vram[0]
 
-            global gpu
-            gpu = ""
-            vram = f"{vramArray[0]} {vramArray[1]}"
+            vram = f"{vram[0]} {vram[1]}"
 
             counter = 0
 
-            for i in gpuArray:
+            for i in gpu_name:
                 if counter == 0:
-                    gpu = i
+                    gpu_name = i
                 else:
-                    gpu = f"{gpu} {i}"
+                    gpu_name = f"{gpu_name} {i}"
                 
                 counter+=1
             
-            gpu = f"{gpu} ({vram})" # Insert VRAM amount in string
+            gpu_name = f"{gpu} ({vram})" # Insert VRAM amount in string
             
-            return gpu
+            return gpu_name
     
     elif name == "RAM":
         if osName == "MacOS": 
-                    ramArray = subprocess.check_output("system_profiler SPHardwareDataType | grep Memory", shell=True, encoding='utf-8').split()
-                    ramSize = ramArray[1]
-                    ramMeasurement = ramArray[2]
-                    ram = f"{ramSize} {ramMeasurement}"
-                    return ram
-
+            ram = subprocess.check_output("system_profiler SPHardwareDataType | grep Memory", shell=True, encoding='utf-8').split()
+            ramSize = ram[1]
+            ramMeasurement = ram[2]
+            ram = f"{ramSize} {ramMeasurement}"
+            return ram
+        else:
+            memory = subprocess.check_output("cat /proc/meminfo | grep MemTotal", shell=True, encoding='utf-8').split()
+            del memory[0]
+            memorySize = round(int(memory[0])/1000**2)
+            memoryMeasurement = "GB"
+            memory = f"{memorySize} {memoryMeasurement}"
+            return memory
+            
     
     else:
         return None
