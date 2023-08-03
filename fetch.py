@@ -96,23 +96,29 @@ def getInfo(name):
     elif name == "CPU":
         if osName == "MacOS":
             cpu_name = subprocess.check_output("sysctl machdep.cpu.brand_string", shell=True, encoding='utf-8').split()
-            return f"{cpu_name}"
+            
+            cpu = ""
+            for i,v in enumerate(cpu_name):
+                if i == 1:
+                    cpu = v
+                else:
+                    cpu = f"{cpu} {v}"
+
+            return cpu
         else:
             cpu_name = subprocess.check_output("cat /proc/cpuinfo | grep 'model name' | tail -n 1", shell=True, encoding='utf-8').split()
             del cpu_name[0]
             del cpu_name[0]
             del cpu_name[0]
             
-
-            counter = 0
-            for i in cpu_name:
-                if counter == 0:
-                    cpu_name = i
+            cpu = ""
+            for i,v in enumerate(cpu_name):
+                if i == 1:
+                    cpu = i
                 else:
-                    cpu_name = f"{cpu_name} {i}"
-                counter+=1
+                    cpu = f"{cpu_name} {i}"
 
-            return cpu_name
+            return cpu
             
             
 
@@ -138,7 +144,7 @@ def getInfo(name):
                 
                 counter+=1
             
-            gpu_name = f"{gpu} ({vram})" # Insert VRAM amount in string
+            gpu_name = f"{gpu_name} ({vram})" # Insert VRAM amount in string
             
             return gpu_name
     
