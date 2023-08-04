@@ -67,13 +67,10 @@ def getInfo(name):
             return f"{osName} {distro.version()}"
         
     elif name == "Hostname":
-        if osName == "MacOS":
-            return subprocess.check_output("scutil --get ComputerName", shell=True, encoding='utf-8').strip()
-        elif osName == "Windows":
-            return subprocess.check_output("powershell hostname", shell=True, encoding='utf-8').strip()
-        else:
-            return subprocess.check_output("cat /etc/hostname", shell=True, encoding='utf-8').strip()
-    
+        if osName != "Windows":
+            hostname = subprocess.check_output("hostname", shell=True, encoding='utf-8').strip()
+            return hostname
+
     elif name == "Window Manager":
         if osName == "MacOS":
             counter = 0
