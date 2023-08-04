@@ -96,31 +96,23 @@ def getInfo(name):
     elif name == "CPU":
         if osName == "MacOS":
             cpu_name = subprocess.check_output("sysctl machdep.cpu.brand_string", shell=True, encoding='utf-8').split()
-            
-            cpu = ""
-            for i,v in enumerate(cpu_name):
-                if i == 1:
-                    cpu = v
-                else:
-                    cpu = f"{cpu} {v}"
-
-            return cpu
+            return f"{cpu_name}"
         else:
             cpu_name = subprocess.check_output("cat /proc/cpuinfo | grep 'model name' | tail -n 1", shell=True, encoding='utf-8').split()
             del cpu_name[0]
             del cpu_name[0]
             del cpu_name[0]
             
-            cpu = ""
-            for i,v in enumerate(cpu_name):
-                if i == 1:
-                    cpu = i
-                else:
-                    cpu = f"{cpu_name} {i}"
 
-            return cpu
-            
-            
+            counter = 0
+            for i in cpu_name:
+                if counter == 0:
+                    cpu_name = i
+                else:
+                    cpu_name = f"{cpu_name} {i}"
+                counter+=1
+
+            return cpu_name
 
     elif name == "GPU":
         if osName == "MacOS":
@@ -131,22 +123,25 @@ def getInfo(name):
             del vram[0]
             del vram[0]
             del vram[0]
+            
 
+            gpu = ""
             vram = f"{vram[0]} {vram[1]}"
 
             counter = 0
 
             for i in gpu_name:
                 if counter == 0:
-                    gpu_name = i
+                    gpu = i
                 else:
-                    gpu_name = f"{gpu_name} {i}"
+                    gpu = f"{gpu} {i}"
                 
                 counter+=1
             
-            gpu_name = f"{gpu_name} ({vram})" # Insert VRAM amount in string
+            gpu_name = f"{gpu} ({vram})" # Insert VRAM amount in string
             
-            return gpu_name
+            return gpu_name         
+
     
     elif name == "RAM":
         if osName == "MacOS": 
