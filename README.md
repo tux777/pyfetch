@@ -14,4 +14,5 @@ My coding is also very messy and most likely very error prone. Please let me kno
 ## How do I download and run?
 1. ```git clone https://github.com/tux777/pyfetch.git```\
    1.1 ```git checkout dev``` ***Optional step for using dev branch instead of main***
+   1.2 ```git pull``` ***Optional step for using dev branch instead of main***
 3. ```python3 fetch.py```
