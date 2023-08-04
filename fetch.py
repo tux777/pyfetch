@@ -123,7 +123,7 @@ def getInfo(name):
             del vram[0]
             del vram[0]
             del vram[0]
-            
+
 
             gpu = ""
             vram = f"{vram[0]} {vram[1]}"
@@ -135,13 +135,36 @@ def getInfo(name):
                     gpu = i
                 else:
                     gpu = f"{gpu} {i}"
-                
-                counter+=1
-            
-            gpu_name = f"{gpu} ({vram})" # Insert VRAM amount in string
-            
-            return gpu_name         
 
+                counter+=1
+
+            gpu_name = f"{gpu} ({vram})" # Insert VRAM amount in string
+
+            return gpu_name
+        else:
+            if subprocess.check_output("lspci | grep -c VGA", shell=True, encoding='utf-8').split()[0] == "1":
+                before_split = subprocess.check_output("lspci | grep VGA", shell=True, encoding='utf-8')
+                gpu_name = subprocess.check_output("lspci | grep VGA", shell=True, encoding='utf-8').split()
+
+                counter = 0
+                stuffToRemove = ["VGA", ":", "compatible", "Corporation", "Integrated", "Graphics", "Controller", "(rev", "01)", "02)", "03)", "04)", "05)", "06)", "07)", "08)", "09)"] # I don't know how many rev ids there are
+
+                for i,v in enumerate(stuffToRemove):
+                    for j in gpu_name:
+                        if v in j:
+                            gpu_name.remove(j)
+
+                gpu = ""
+
+                counter = 0
+                for i in gpu_name:
+                    if counter == 0:
+                        gpu = i
+                    else:
+                        gpu = f"{gpu} {i}"
+                    counter += 1
+
+                return gpu
     
     elif name == "RAM":
         if osName == "MacOS": 
