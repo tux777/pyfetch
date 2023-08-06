@@ -88,7 +88,8 @@ def getInfo(name):
 
 
     elif name == "Shell":
-        return os.getenv("SHELL")
+        shell = os.getenv("SHELL").split("/")
+        return shell[len(shell)-1] # Subtract by 1 because indexs usually starts at 0
 
     elif name == "CPU":
         if osName == "MacOS":
