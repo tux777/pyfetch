@@ -11,11 +11,23 @@ except ModuleNotFoundError as err:
     print(f"Module '{err.name}' was not found. Please install it with pip")
     os._exit(0)
 
-# The dictionary above stores all info / optional info for fetch.
-# The dictonarily allows for flexibility and custom info added by the user
+# Format is "option-name": value, ...
+# For an example: "showShellPath": True
 
-info = [
-    { "name": "Operating System", "info": None, "enabled": True }, 
+# You can enable an option by setting it to true
+# Or you can also disable by setting it to false or removing the option altogether.
+
+#options as of right now are:
+# showShellPath | Shows the full path to your shell rather than just displaying its name.
+
+options = { "showShellPath": False} # DO NOT REMOVE! ONLY REMOVE THE OPTIONS INSIDE
+
+# Format is explanatory
+# For clarification, info can either be None or have custom info that is persistent no matter what.
+# Custom info can be of any type (excluding None obviously). 
+
+info = [ # DO NOT REMOVE! ONLY REMOVE THE INFO INSIDE
+    { "name": "Operating System", "info": True, "enabled": True }, 
     { "name": "Hostname", "info": None, "enabled": True }, 
     { "name": "Window Manager", "info": None, "enabled": True }, 
     { "name": "Shell", "info": None, "enabled": True }, 
@@ -47,18 +59,18 @@ bold_colors = {
 }
 
 def getInfo(name):
-    
-    # Get if system is either windows, linux or macos
-    osName = distro.name()
-    if osName == "Darwin":
-        osName = "MacOS"
-    
     macosWMs = ["[c]hunkwm", "[K]wm", "[y]abai", "[A]methyst", "[S]pectacle", "[R]ectangle"]
     macosDefaultWM = "Quartz Compositor"
+    
 
-
+    osName = distro.name()
+    if osName == "Darwin":
+        osName = "MacOS" # The changing of the osName from Darwin to MacOS isn't needed at all
+    # MacOS is a name that everyone is familiar with
+    
     # Base Info
     if name == "Operating System":
+
         if osName == "MacOS":
             return f"{osName} {platform.mac_ver()[0]}"
         elif osName == "Windows":
@@ -88,9 +100,13 @@ def getInfo(name):
 
 
     elif name == "Shell":
-        shell = os.getenv("SHELL").split("/")
-        return shell[len(shell)-1] # Subtract by 1 because indexs usually starts at 0
-
+        shell = os.getenv("SHELL")
+        if options.get("showShellPath") == True:
+            return shell
+        else:
+            shell = shell.split("/")
+            return shell[len(shell)-1] # Subtract by 1 because index starts at 0
+            
     elif name == "CPU":
         if osName == "MacOS":
             cpu_name = subprocess.check_output("sysctl machdep.cpu.brand_string", shell=True, encoding='utf-8').split()
@@ -195,8 +211,7 @@ for information in info:
 
     if enabled == True:
         if info == None: 
-            if name == "Operating System" or name == "Hostname" or name == "Window Manager" or name == "Shell" or name == "CPU" or name == "GPU" or name == "RAM":
-                returnedInfo = getInfo(name)
-                print(f"{bold_blue}{name}: {white}{returnedInfo}")
+            returnedInfo = getInfo(name)
+            print(f"{bold_blue}{name}: {white}{returnedInfo}")
         else:
-            print(f"{bold_blue}{name}: {white}{info}")
+            print(f"{bold_blue}{name}: {white}{info}") # If info is present within the info, just print the info instead rather than trying to fetch it in the getInfo function
