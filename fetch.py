@@ -10,6 +10,8 @@ try:
 except ModuleNotFoundError as err:
     print(f"Module '{err.name}' was not found. Please install it with pip")
     os._exit(0)
+    
+print(distro.name())
 
 # Format is "option-name": value, ...
 # For an example: "showShellPath": True
@@ -27,7 +29,7 @@ options = { "showShellPath": False} # DO NOT REMOVE! ONLY REMOVE THE OPTIONS INS
 # Custom info can be of any type (excluding None obviously). 
 
 info = [ # DO NOT REMOVE! ONLY REMOVE THE INFO INSIDE
-    { "name": "Operating System", "info": True, "enabled": True }, 
+    { "name": "Operating System", "info": None, "enabled": True }, 
     { "name": "Hostname", "info": None, "enabled": True }, 
     { "name": "Window Manager", "info": None, "enabled": True }, 
     { "name": "Shell", "info": None, "enabled": True }, 
@@ -74,10 +76,10 @@ def getInfo(name):
 
         if osName == "MacOS":
             return f"{osName} {platform.mac_ver()[0]}"
-        elif osName == "Windows":
-            return f"{osName} {platform.win32_ver()[0]}"
+        #elif osName == "Windows":
+            #return f"{osName} {platform.win32_ver()[0]}"
         else:
-            return f"{osName} {distro.version()}"
+            return f"{osName}"
         
     elif name == "Hostname":
         if osName != "Windows":
