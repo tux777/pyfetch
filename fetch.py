@@ -44,7 +44,8 @@ colors = {
     "blue": '\033[0;34m',
     "purple": '\033[0;35m',
     "cyan": '\033[0;36m',
-    "white": '\033[0;37m'
+    "white": '\033[0;37m',
+    "reset": "\033[0;0m",
 }
 
 bold_colors = {
@@ -55,7 +56,7 @@ bold_colors = {
     "blue": '\033[1;34m',
     "purple": '\033[1;35m',
     "cyan": '\033[1;36m',
-    "white": '\033[1;37m'
+    "white": '\033[1;37m',
 }
 
 def getInfo(name):
@@ -207,11 +208,11 @@ for information in info:
     enabled = information.get("enabled")
 
     bold_blue = bold_colors.get("blue")
-    white = colors.get("white")
+    reset = colors.get("reset")
 
     if enabled == True:
         if info == None: 
             returnedInfo = getInfo(name)
-            print(f"{bold_blue}{name}: {white}{returnedInfo}")
+            print(f"{bold_blue}{name}: {reset}{returnedInfo}")
         else:
-            print(f"{bold_blue}{name}: {white}{info}") # If info is present within the info, just print the info instead rather than trying to fetch it in the getInfo function
+            print(f"{bold_blue}{name}: {reset}{info}") # If info is present within the info, just print the info instead rather than trying to fetch it in the getInfo function
