@@ -9,9 +9,7 @@ try:
    import distro
 except ModuleNotFoundError as err:
     print(f"Module '{err.name}' was not found. Please install it with pip")
-    os._exit(0)
-    
-print(distro.name())
+    os._exit(0) 
 
 # Format is "option-name": value, ...
 # For an example: "showShellPath": True
