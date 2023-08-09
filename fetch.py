@@ -5,11 +5,20 @@ import platform
 import subprocess
 import os  
 
-try:
-   import distro
-except ModuleNotFoundError as err:
-    print(f"Module '{err.name}' was not found. Please install it with pip")
-    os._exit(0) 
+sysname = platform.uname()[0]
+
+if sysname == "Linux" or sysname == "Darwin":
+    try:
+        import distro
+    except ModuleNotFoundError as err:
+        print(f"Module '{err.name}' was not found. Please install it with pip")
+        os._exit(0) 
+elif sysname == "Windows":
+    try:
+        import wmi
+    except ModuleNotFoundError as err:
+        print(f"Module '{err.name}' was not found. Please install it with pip")
+        os._exit(0) 
 
 # Format is "option-name": value, ...
 # For an example: "showShellPath": True
@@ -62,30 +71,30 @@ bold_colors = {
 def getInfo(name):
     macosWMs = ["[c]hunkwm", "[K]wm", "[y]abai", "[A]methyst", "[S]pectacle", "[R]ectangle"]
     macosDefaultWM = "Quartz Compositor"
-    
-
-    osName = distro.name()
-    if osName == "Darwin":
-        osName = "MacOS" # The changing of the osName from Darwin to MacOS isn't needed at all
+        
+        # The changing of the osName from Darwin to MacOS isn't needed at all
     # MacOS is a name that everyone is familiar with
     
     # Base Info
     if name == "Operating System":
-
-        if osName == "MacOS":
+        if sysname == "Darwin" or sysname == "Linux":
+            osName = distro.name()
+            if osName == "Darwin":
+                osName = "MacOS"
+        elif sysname == "Windows":
+            osName = wmi.WMI().Win32_OperatingSystem()[0].Caption
+        
+        if sysname == "Darwin":
             return f"{osName} {platform.mac_ver()[0]}"
-        #elif osName == "Windows":
-            #return f"{osName} {platform.win32_ver()[0]}"
         else:
             return f"{osName}"
         
     elif name == "Hostname":
-        if osName != "Windows":
-            hostname = subprocess.check_output("hostname", shell=True, encoding='utf-8').strip()
-            return hostname
+        hostname = subprocess.check_output("hostname", shell=True, encoding='utf-8').strip()
+        return hostname
 
     elif name == "Window Manager":
-        if osName == "MacOS":
+        if sysname == "Darwin":
             counter = 0
             for wm in macosWMs:
                 counter+=1
@@ -101,20 +110,21 @@ def getInfo(name):
 
 
     elif name == "Shell":
-        shell = os.getenv("SHELL")
-        if options.get("showShellPath") == True:
-            return shell
-        else:
-            shell = shell.split("/")
-            return shell[len(shell)-1] # Subtract by 1 because index starts at 0
+        if sysname == "Darwin" or sysname == "Linux":
+            shell = os.getenv("SHELL")
+            if options.get("showShellPath") == True:
+                return shell
+            else:
+                shell = shell.split("/")
+                return shell[len(shell)-1] # Subtract by 1 because index starts at 0
             
     elif name == "CPU":
-        if osName == "MacOS":
+        if sysname == "Darwin":
             cpu_name = subprocess.check_output("sysctl machdep.cpu.brand_string", shell=True, encoding='utf-8').split()
             cpu_name = f"{cpu_name[1].split('(')[0]} {cpu_name[2].split('(')[0]} {cpu_name[3]} @ {cpu_name[6]}" 
             cores = subprocess.check_output("sysctl machdep.cpu.core_count", shell=True, encoding='utf-8').split()[1]
             return f"{cpu_name}"
-        else:
+        elif sysname == "Linux":
             cpu_name = subprocess.check_output("cat /proc/cpuinfo | grep 'model name' | tail -n 1", shell=True, encoding='utf-8').split()
             del cpu_name[0]
             del cpu_name[0]
@@ -130,9 +140,13 @@ def getInfo(name):
                 counter+=1
 
             return cpu_name
+        elif sysname == "Windows":
+            #cpu_name = subprocess.check_output("powershell.exe \"(Get-WmiObject Win32_Processor).name\"", shell=True, encoding="utf-8").strip()
+            cpu_name = wmi.WMI().Win32_Processor()[0].Name
+            return cpu_name
 
     elif name == "GPU":
-        if osName == "MacOS":
+        if sysname == "Darwin":
             gpu_name = subprocess.check_output("system_profiler SPDisplaysDataType | grep Chipset", shell=True, encoding='utf-8').split()
             vram = subprocess.check_output("system_profiler SPDisplaysDataType | grep VRAM", shell=True, encoding='utf-8').split()
             del gpu_name[0]
@@ -158,7 +172,7 @@ def getInfo(name):
             gpu_name = f"{gpu} ({vram})" # Insert VRAM amount in string
 
             return gpu_name
-        else:
+        elif sysname == "Linux":
             if subprocess.check_output("lspci | grep -c VGA", shell=True, encoding='utf-8').split()[0] == "1":
                 before_split = subprocess.check_output("lspci | grep VGA", shell=True, encoding='utf-8')
                 gpu_name = subprocess.check_output("lspci | grep VGA", shell=True, encoding='utf-8').split()
@@ -182,21 +196,31 @@ def getInfo(name):
                     counter += 1
 
                 return gpu
+        elif sysname == "Windows":
+            #gpu_name = subprocess.check_output("powershell.exe \"(Get-WmiObject Win32_VideoController).name\"", shell=True, encoding='utf-8').strip()
+            gpu_name = wmi.WMI().Win32_VideoController()[0].Name
+            return gpu_name
     
     elif name == "RAM":
-        if osName == "MacOS": 
+        if sysname == "MacOS": 
             ram = subprocess.check_output("system_profiler SPHardwareDataType | grep Memory", shell=True, encoding='utf-8').split()
             ramSize = ram[1]
             ramMeasurement = ram[2]
             ram = f"{ramSize} {ramMeasurement}"
             return ram
-        else:
+        elif sysname == "Linux":
             memory = subprocess.check_output("cat /proc/meminfo | grep MemTotal", shell=True, encoding='utf-8').split()
             del memory[0]
             memorySize = round(int(memory[0])/1000**2)
             memoryMeasurement = "GB"
             memory = f"{memorySize} {memoryMeasurement}"
             return memory
+        elif sysname == "Windows":
+            memory = 0
+            for stick in wmi.WMI().Win32_PhysicalMemory():
+                memory += int(stick.Capacity) / 1024**3
+            memory = str(memory).split(".")[0]
+            return f"{memory} GB"
             
     
     else:
@@ -213,6 +237,7 @@ for information in info:
     if enabled == True:
         if info == None: 
             returnedInfo = getInfo(name)
-            print(f"{bold_blue}{name}: {reset}{returnedInfo}")
+            if returnedInfo != None:
+                print(f"{bold_blue}{name}: {reset}{returnedInfo}")    
         else:
             print(f"{bold_blue}{name}: {reset}{info}") # If info is present within the info, just print the info instead rather than trying to fetch it in the getInfo function
