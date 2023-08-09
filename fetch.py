@@ -81,9 +81,8 @@ def getInfo(name):
             osName = distro.name()
             if osName == "Darwin":
                 osName = "MacOS"
-        elif sysname == "Windows":
+        if sysname == "Windows":
             osName = wmi.WMI().Win32_OperatingSystem()[0].Caption
-        
         if sysname == "Darwin":
             return f"{osName} {platform.mac_ver()[0]}"
         else:
