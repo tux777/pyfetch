@@ -198,8 +198,11 @@ def getInfo(name):
                 return gpu
         elif sysname == "Windows":
             #gpu_name = subprocess.check_output("powershell.exe \"(Get-WmiObject Win32_VideoController).name\"", shell=True, encoding='utf-8').strip()
-            gpu_name = wmi.WMI().Win32_VideoController()[0].Name
-            return gpu_name
+            gpus_wmi = wmi.WMI().Win32_VideoController()
+            gpus = []
+            for gpu in gpus_wmi:
+                gpus.append(gpu.Name)
+            return gpus
     
     elif name == "RAM":
         if sysname == "MacOS": 
@@ -237,7 +240,15 @@ for information in info:
     if enabled == True:
         if info == None: 
             returnedInfo = getInfo(name)
-            if returnedInfo != None:
-                print(f"{bold_blue}{name}: {reset}{returnedInfo}")    
+            if type(returnedInfo) is str:
+                print(f"{bold_blue}{name}: {reset}{returnedInfo}")
+            elif type(returnedInfo) is list:
+                if len(returnedInfo) == 1:
+                    print(f"{bold_blue}{name}: {reset}{returnedInfo[0]}")
+                elif len(returnedInfo) > 1:
+                    counter = 0
+                    for i in returnedInfo:
+                        counter += 1
+                        print(f"{bold_blue}{name} {counter}: {reset}{returnedInfo[counter-1]}")   
         else:
             print(f"{bold_blue}{name}: {reset}{info}") # If info is present within the info, just print the info instead rather than trying to fetch it in the getInfo function
