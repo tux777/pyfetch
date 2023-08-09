@@ -141,9 +141,11 @@ def getInfo(name):
 
             return cpu_name
         elif sysname == "Windows":
-            #cpu_name = subprocess.check_output("powershell.exe \"(Get-WmiObject Win32_Processor).name\"", shell=True, encoding="utf-8").strip()
-            cpu_name = wmi.WMI().Win32_Processor()[0].Name
-            return cpu_name
+            cpus_wmi = wmi.WMI().Win32_Processor()
+            cpus = []
+            for cpu in cpus_wmi:
+                cpus.append(cpu.Name)
+            return cpus
 
     elif name == "GPU":
         if sysname == "Darwin":
@@ -197,7 +199,6 @@ def getInfo(name):
 
                 return gpu
         elif sysname == "Windows":
-            #gpu_name = subprocess.check_output("powershell.exe \"(Get-WmiObject Win32_VideoController).name\"", shell=True, encoding='utf-8').strip()
             gpus_wmi = wmi.WMI().Win32_VideoController()
             gpus = []
             for gpu in gpus_wmi:
