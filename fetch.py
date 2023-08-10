@@ -10,9 +10,11 @@ from getInfo import getInfo
 # Or you can also disable by setting it to false or removing the option altogether.
 
 #options as of right now are:
-# showShellPath | Shows the full path to your shell rather than just displaying its name.
 
-options = { "showShellPath": False } # DO NOT REMOVE! ONLY REMOVE THE OPTIONS INSIDE
+# showShellPath | Shows the full path to your shell rather than just displaying its name.
+# showRAMSpeed | Shows ram speed in MHz
+
+options = { "showShellPath": False, "showRAMSpeed": True } # DO NOT REMOVE! ONLY REMOVE THE OPTIONS INSIDE
 
 # Format is explanatory
 # For clarification, info can either be None or have custom info that is persistent no matter what.

@@ -4,6 +4,8 @@ import os
 
 sysname = platform.uname()[0]
 
+# OS Specific Imports
+
 if sysname == "Linux" or sysname == "Darwin":
     try:
         import distro
@@ -25,6 +27,8 @@ def getInfo(name, options):
     # MacOS is a name that everyone is familiar with
     
     # Base Info
+    
+    # Operating System
     if name == "Operating System":
         if sysname == "Darwin" or sysname == "Linux":
             osName = distro.name()
@@ -36,11 +40,15 @@ def getInfo(name, options):
             return f"{osName} {platform.mac_ver()[0]}"
         else:
             return f"{osName}"
-        
+    
+    
+    # Hostname
     elif name == "Hostname":
         hostname = subprocess.check_output("hostname", shell=True, encoding='utf-8').strip()
         return hostname
-
+    
+    
+    # Window Manager
     elif name == "Window Manager":
         if sysname == "Darwin":
             counter = 0
@@ -56,7 +64,7 @@ def getInfo(name, options):
                         continue
             
 
-
+    # Shell
     elif name == "Shell":
         if sysname == "Darwin" or sysname == "Linux":
             shell = os.getenv("SHELL")
@@ -66,6 +74,7 @@ def getInfo(name, options):
                 shell = shell.split("/")
                 return shell[len(shell)-1] # Subtract by 1 because index starts at 0
             
+    # CPU        
     elif name == "CPU":
         if sysname == "Darwin":
             cpu_name = subprocess.check_output("sysctl machdep.cpu.brand_string", shell=True, encoding='utf-8').split()
@@ -95,15 +104,16 @@ def getInfo(name, options):
                 cpus.append(cpu.Name)
             return cpus
 
+    # GPU
     elif name == "GPU":
         if sysname == "Darwin":
             gpu_name = subprocess.check_output("system_profiler SPDisplaysDataType | grep Chipset", shell=True, encoding='utf-8').split()
             vram = subprocess.check_output("system_profiler SPDisplaysDataType | grep VRAM", shell=True, encoding='utf-8').split()
             gpu_name.remove("Chipset")
             gpu_name.remove("Model:")
-            del vram[0]
-            del vram[0]
-            del vram[0]
+            vram.remove("VRAM")
+            vram.remove("(Dynamic,")
+            vram.remove("Max):")
 
 
             gpu = ""
@@ -153,13 +163,24 @@ def getInfo(name, options):
                 gpus.append(gpu.Name)
             return gpus
     
+    # RAM
     elif name == "RAM":
-        if sysname == "MacOS": 
-            ram = subprocess.check_output("system_profiler SPHardwareDataType | grep Memory", shell=True, encoding='utf-8').split()
-            ramSize = ram[1]
-            ramMeasurement = ram[2]
-            ram = f"{ramSize} {ramMeasurement}"
-            return ram
+        if sysname == "Darwin": 
+            ramSticks = subprocess.check_output("system_profiler SPMemoryDataType | Grep Size", shell=True, encoding='utf-8').split("\n")
+            size = 0
+            
+            for stick in ramSticks:
+                stick = stick.split()
+                if stick == []:
+                    continue
+                else:
+                    size += int(stick[1])
+            
+            if options.get("showRAMSpeed"):
+                ramSpeed = subprocess.check_output("system_profiler SPMemoryDataType | Grep Speed", shell=True, encoding='utf-8').split("\n")[0].split()
+                ram = f"{size} GB ({ramSpeed[1]} {ramSpeed[2]})"
+                return ram
+        
         elif sysname == "Linux":
             memory = subprocess.check_output("cat /proc/meminfo | grep MemTotal", shell=True, encoding='utf-8').split()
             del memory[0]
