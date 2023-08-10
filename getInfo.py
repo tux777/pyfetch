@@ -189,11 +189,19 @@ def getInfo(name, options):
             memory = f"{memorySize} {memoryMeasurement}"
             return memory
         elif sysname == "Windows":
+            sticks = wmi.WMI().Win32_PhysicalMemory()
             memory = 0
-            for stick in wmi.WMI().Win32_PhysicalMemory():
+            
+            for stick in sticks:
                 memory += int(stick.Capacity) / 1024**3
             memory = str(memory).split(".")[0]
-            return f"{memory} GB"
+            memory = f"{memory} GB"
+            
+            if options.get("showRAMSpeed"):
+                speed = sticks[0].Speed
+                memory = f"{memory} ({speed} MHz)"
+            
+            return memory
             
     
     else:
