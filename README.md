@@ -6,7 +6,7 @@ It's missing most of the core and convinient features that neofetch offers, let 
 * pyfetch does not have ascii logos to print in the terminal
 * pyfetch does not print images to your terminal
 * pyfetch does not offer custom themes or the creation of custom themes to print to the terminal
-* pyfetch does not support nearly any and as much operating systems as neofetch does **(Only supports MacOS, Mainstream Linux distros)**
+* pyfetch does not support nearly any and as much operating systems as neofetch does **(Only supports Windows, MacOS and some Mainstream Linux distros)**
 
 <!-- end of the list -->
 \
