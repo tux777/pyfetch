@@ -42,6 +42,16 @@ def getInfo(name, options):
             return f"{osName}"
     
     
+    # Kernel    
+    elif name == "Kernel":
+        if sysname == "Darwin" or sysname == "Linux":
+            kernel = subprocess.check_output("uname -r", shell=True, encoding='utf-8').strip()
+            return kernel
+        elif sysname == "Windows":
+            kernel = subprocess.check_output("powershell \"Get-WmiObject Win32_OperatingSystem | Select-Object -ExpandProperty Version\"", shell=True, encoding='utf-8').strip()
+            return kernel
+    
+    
     # Hostname
     elif name == "Hostname":
         if sysname == "Linux":
@@ -193,6 +203,7 @@ def getInfo(name, options):
             memoryMeasurement = "GB"
             memory = f"{memorySize} {memoryMeasurement}"
             return memory
+        
         elif sysname == "Windows":
             sticks = wmi.WMI().Win32_PhysicalMemory()
             memory = 0
