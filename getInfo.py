@@ -2,7 +2,7 @@ import platform
 import subprocess
 import os  
 
-sysname = platform.uname()[0]
+sysname = platform.uname()[0] # Detetct OS
 
 # OS Specific Imports
 
