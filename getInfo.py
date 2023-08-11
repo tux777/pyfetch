@@ -134,7 +134,8 @@ def getInfo(name, options):
 
             return gpu_name
         elif sysname == "Linux":
-            if subprocess.check_output("lspci | grep -c VGA", shell=True, encoding='utf-8').split()[0] == "1":
+            try:
+                subprocess.check_output("lspci | grep -c VGA", shell=True, encoding='utf-8')
                 before_split = subprocess.check_output("lspci | grep VGA", shell=True, encoding='utf-8')
                 gpu_name = subprocess.check_output("lspci | grep VGA", shell=True, encoding='utf-8').split()
 
@@ -157,6 +158,9 @@ def getInfo(name, options):
                     counter += 1
 
                 return gpu
+            except SystemExit as err:
+                return
+                
         elif sysname == "Windows":
             gpus_wmi = wmi.WMI().Win32_VideoController()
             gpus = []
