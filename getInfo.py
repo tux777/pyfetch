@@ -45,7 +45,7 @@ def getInfo(name, options):
     # Hostname
     elif name == "Hostname":
         if sysname == "Linux":
-            hostname = subprocess.check_output("echo $hostname", shell=True, encoding='utf-8').strip()
+            hostname = subprocess.check_output("cat /etc/hostname", shell=True, encoding='utf-8').strip()
             return hostname
         elif sysname == "Darwin" or sysname == "Windows":
             hostname = subprocess.check_output("hostname", shell=True, encoding='utf-8').strip()
