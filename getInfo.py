@@ -113,6 +113,7 @@ def getInfo(name, options):
         if sysname == "Darwin":
             gpu_name = subprocess.check_output("system_profiler SPDisplaysDataType | grep Chipset", shell=True, encoding='utf-8').split()
             vram = subprocess.check_output("system_profiler SPDisplaysDataType | grep VRAM", shell=True, encoding='utf-8').split()
+            
             gpu_name.remove("Chipset")
             gpu_name.remove("Model:")
             vram.remove("VRAM")
@@ -123,15 +124,11 @@ def getInfo(name, options):
             gpu = ""
             vram = f"{vram[0]} {vram[1]}"
 
-            counter = 0
-
-            for i in gpu_name:
-                if counter == 0:
-                    gpu = i
+            for i,v in enumerate(gpu_name):
+                if i == 0:
+                    gpu = v
                 else:
-                    gpu = f"{gpu} {i}"
-
-                counter+=1
+                    gpu = f"{gpu} {v}"
 
             gpu_name = f"{gpu} ({vram})" # Insert VRAM amount in string
 
