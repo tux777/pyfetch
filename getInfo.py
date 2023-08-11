@@ -44,8 +44,12 @@ def getInfo(name, options):
     
     # Hostname
     elif name == "Hostname":
-        hostname = subprocess.check_output("hostname", shell=True, encoding='utf-8').strip()
-        return hostname
+        if sysname == "Linux":
+            hostname = subprocess.check_output("echo $hostname", shell=True, encoding='utf-8').strip()
+            return hostname
+        elif sysname == "Darwin" or sysname == "Windows":
+            hostname = subprocess.check_output("hostname", shell=True, encoding='utf-8').strip()
+            return hostname
     
     
     # Window Manager
