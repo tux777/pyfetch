@@ -158,7 +158,7 @@ def getInfo(name, options):
                     counter += 1
 
                 return gpu
-            except SystemExit as err:
+            except subprocess.CalledProcessError as err:
                 return
                 
         elif sysname == "Windows":
