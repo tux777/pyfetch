@@ -21,13 +21,14 @@ options = { "showShellPath": False, "showRAMSpeed": True } # DO NOT REMOVE! ONLY
 # Custom info can be of any type (excluding None obviously). 
 
 info = [ # DO NOT REMOVE! ONLY REMOVE THE INFO INSIDE
-    { "name": "Operating System", "info": None, "enabled": True }, 
+    { "name": "Operating System", "info": None, "enabled": True },
+    { "name": "Kernel", "info": None, "enabled": True }, 
     { "name": "Hostname", "info": None, "enabled": True }, 
     { "name": "Window Manager", "info": None, "enabled": True }, 
     { "name": "Shell", "info": None, "enabled": True }, 
     { "name": "CPU", "info": None, "enabled": True }, 
     { "name": "GPU", "info": None, "enabled": True }, 
-    { "name": "RAM", "info": None, "enabled": True }
+    { "name": "RAM", "info": None, "enabled": True },
 ]
 
 colors = {
