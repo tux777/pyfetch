@@ -22,203 +22,204 @@ elif sysname == "Windows":
 def getInfo(name, options):
     macosWMs = ["[c]hunkwm", "[K]wm", "[y]abai", "[A]methyst", "[S]pectacle", "[R]ectangle"]
     macosDefaultWM = "Quartz Compositor"
-        
-        # The changing of the osName from Darwin to MacOS isn't needed at all
-    # MacOS is a name that everyone is familiar with
     
     # Base Info
     
-    # Operating System
-    if name == "Operating System":
-        if sysname == "Darwin" or sysname == "Linux":
-            osName = distro.name()
-            if osName == "Darwin":
-                osName = "MacOS"
-        if sysname == "Windows":
-            osName = wmi.WMI().Win32_OperatingSystem()[0].Caption
-        if sysname == "Darwin":
-            return f"{osName} {platform.mac_ver()[0]}"
-        else:
-            return f"{osName}"
-    
-    
-    # Kernel    
-    elif name == "Kernel":
-        if sysname == "Darwin" or sysname == "Linux":
-            kernel = subprocess.check_output("uname -r", shell=True, encoding='utf-8').strip()
-            return kernel
-        elif sysname == "Windows":
-            kernel = subprocess.check_output("powershell \"Get-WmiObject Win32_OperatingSystem | Select-Object -ExpandProperty Version\"", shell=True, encoding='utf-8').strip()
-            return kernel
-    
-    
-    # Hostname
-    elif name == "Hostname":
-        if sysname == "Linux":
-            hostname = subprocess.check_output("cat /etc/hostname", shell=True, encoding='utf-8').strip()
-            return hostname
-        elif sysname == "Darwin" or sysname == "Windows":
-            hostname = subprocess.check_output("hostname", shell=True, encoding='utf-8').strip()
-            return hostname
-    
-    
-    # Window Manager
-    elif name == "Window Manager":
-        if sysname == "Darwin":
-            counter = 0
-            for wm in macosWMs:
-                counter+=1
-                if counter == len(macosWMs):
-                    return macosDefaultWM
-                else:
-                    try:
-                        process = subprocess.check_output(f'ps aux | grep "{wm}"', shell=True, encoding='utf-8').strip()
-                        return wm
-                    except subprocess.CalledProcessError as err:
-                        continue
-            
-
-    # Shell
-    elif name == "Shell":
-        if sysname == "Darwin" or sysname == "Linux":
-            shell = os.getenv("SHELL")
-            if options.get("showShellPath") == True:
-                return shell
+    match name:
+        
+        # Operating System
+        case "Operating System":
+            if sysname == "Darwin" or sysname == "Linux":
+                osName = distro.name()
+                if osName == "Darwin":
+                    osName = "MacOS"
+            if sysname == "Windows":
+                return wmi.WMI().Win32_OperatingSystem()[0].Caption
+            if sysname == "Darwin":
+                return f"{osName} {platform.mac_ver()[0]}"
             else:
-                shell = shell.split("/")
-                return shell[len(shell)-1] # Subtract by 1 because index starts at 0
+                return f"{osName}"
+        
+        
+        # Kernel
+        case "Kernel":
+            if sysname == "Darwin" or sysname == "Linux":
+                kernel = subprocess.check_output("uname -r", shell=True, encoding='utf-8').strip()
+                return kernel
+            elif sysname == "Windows":
+                kernel = subprocess.check_output("powershell \"Get-WmiObject Win32_OperatingSystem | Select-Object -ExpandProperty Version\"", shell=True, encoding='utf-8').strip()
+                return kernel
             
-    # CPU        
-    elif name == "CPU":
-        if sysname == "Darwin":
-            cpu_name = subprocess.check_output("sysctl machdep.cpu.brand_string", shell=True, encoding='utf-8').split()
-            cpu_name = f"{cpu_name[1].split('(')[0]} {cpu_name[2].split('(')[0]} {cpu_name[3]} @ {cpu_name[6]}" 
-            cores = subprocess.check_output("sysctl machdep.cpu.core_count", shell=True, encoding='utf-8').split()[1]
-            return f"{cpu_name}"
-        elif sysname == "Linux":
-            cpu_name = subprocess.check_output("cat /proc/cpuinfo | grep 'model name' | tail -n 1", shell=True, encoding='utf-8').split()
-            del cpu_name[0]
-            del cpu_name[0]
-            del cpu_name[0]
-            
+        
+        # Hostname
+        case "Hostname":
+            if sysname == "Linux":
+                hostname = subprocess.check_output("cat /etc/hostname", shell=True, encoding='utf-8').strip()
+                return hostname
+            elif sysname == "Darwin" or sysname == "Windows":
+                hostname = subprocess.check_output("hostname", shell=True, encoding='utf-8').strip()
+                return hostname
 
-            counter = 0
-            for i in cpu_name:
-                if counter == 0:
-                    cpu_name = i
+
+        # Window Manager
+        case "Window Manager":
+                if sysname == "Darwin":
+                    counter = 0
+                    for wm in macosWMs:
+                        counter+=1
+                        if counter == len(macosWMs):
+                            return macosDefaultWM
+                        else:
+                            try:
+                                process = subprocess.check_output(f'ps aux | grep "{wm}"', shell=True, encoding='utf-8').strip()
+                                return wm
+                            except subprocess.CalledProcessError as err:
+                                continue    
+                            
+        
+        # Shell
+        case "Shell":
+            if sysname == "Darwin" or sysname == "Linux":
+                shell = os.getenv("SHELL")
+                if options.get("showShellPath") == True:
+                    return shell
                 else:
-                    cpu_name = f"{cpu_name} {i}"
-                counter+=1
+                    shell = shell.split("/")
+                    return shell[len(shell)-1] # Subtract by 1 because index starts at 0
 
-            return cpu_name
-        elif sysname == "Windows":
-            cpus_wmi = wmi.WMI().Win32_Processor()
-            cpus = []
-            for cpu in cpus_wmi:
-                cpus.append(cpu.Name)
-            return cpus
 
-    # GPU
-    elif name == "GPU":
-        if sysname == "Darwin":
-            gpu_name = subprocess.check_output("system_profiler SPDisplaysDataType | grep Chipset", shell=True, encoding='utf-8').split()
-            vram = subprocess.check_output("system_profiler SPDisplaysDataType | grep VRAM", shell=True, encoding='utf-8').split()
+        # CPU
+        case "CPU":
+                if sysname == "Darwin":
+                    cpu_name = subprocess.check_output("sysctl machdep.cpu.brand_string", shell=True, encoding='utf-8').split()
+                    cpu_name = f"{cpu_name[1].split('(')[0]} {cpu_name[2].split('(')[0]} {cpu_name[3]} @ {cpu_name[6]}" 
+                    cores = subprocess.check_output("sysctl machdep.cpu.core_count", shell=True, encoding='utf-8').split()[1]
+                    return f"{cpu_name}"
+                elif sysname == "Linux":
+                    cpu_name = subprocess.check_output("cat /proc/cpuinfo | grep 'model name' | tail -n 1", shell=True, encoding='utf-8').split()
+                    del cpu_name[0]
+                    del cpu_name[0]
+                    del cpu_name[0]
             
-            gpu_name.remove("Chipset")
-            gpu_name.remove("Model:")
-            vram.remove("VRAM")
-            vram.remove("(Dynamic,")
-            vram.remove("Max):")
 
+                    counter = 0
+                    for i in cpu_name:
+                        if counter == 0:
+                            cpu_name = i
+                        else:
+                            cpu_name = f"{cpu_name} {i}"
+                        counter+=1
 
-            gpu = ""
-            vram = f"{vram[0]} {vram[1]}"
-
-            for i,v in enumerate(gpu_name):
-                if i == 0:
-                    gpu = v
-                else:
-                    gpu = f"{gpu} {v}"
-
-            gpu_name = f"{gpu} ({vram})" # Insert VRAM amount in string
-
-            return gpu_name
-        elif sysname == "Linux":
-            try:
-                subprocess.check_output("lspci | grep -c VGA", shell=True, encoding='utf-8')
-                before_split = subprocess.check_output("lspci | grep VGA", shell=True, encoding='utf-8')
-                gpu_name = subprocess.check_output("lspci | grep VGA", shell=True, encoding='utf-8').split()
-
-                counter = 0
-                stuffToRemove = ["VGA", ":", "compatible", "Corporation", "Integrated", "Graphics", "Controller", "(rev", "01)", "02)", "03)", "04)", "05)", "06)", "07)", "08)", "09)"] # I don't know how many rev ids there are
-
-                for i,v in enumerate(stuffToRemove):
-                    for j in gpu_name:
-                        if v in j:
-                            gpu_name.remove(j)
-
-                gpu = ""
-
-                counter = 0
-                for i in gpu_name:
-                    if counter == 0:
-                        gpu = i
-                    else:
-                        gpu = f"{gpu} {i}"
-                    counter += 1
-
-                return gpu
-            except subprocess.CalledProcessError as err:
-                return
+                    return cpu_name
+                elif sysname == "Windows":
+                    cpus_wmi = wmi.WMI().Win32_Processor()
+                    cpus = []
+                    for cpu in cpus_wmi:
+                        cpus.append(cpu.Name)
+                    return cpus
                 
-        elif sysname == "Windows":
-            gpus_wmi = wmi.WMI().Win32_VideoController()
-            gpus = []
-            for gpu in gpus_wmi:
-                gpus.append(gpu.Name)
-            return gpus
-    
-    # RAM
-    elif name == "RAM":
-        if sysname == "Darwin": 
-            ramSticks = subprocess.check_output("system_profiler SPMemoryDataType | Grep Size", shell=True, encoding='utf-8').split("\n")
-            size = 0
+                
+        # GPU
+        case "GPU":
+            if sysname == "Darwin":
+                    gpu_name = subprocess.check_output("system_profiler SPDisplaysDataType | grep Chipset", shell=True, encoding='utf-8').split()
+                    vram = subprocess.check_output("system_profiler SPDisplaysDataType | grep VRAM", shell=True, encoding='utf-8').split()
             
-            for stick in ramSticks:
-                stick = stick.split()
-                if stick == []:
-                    continue
-                else:
-                    size += int(stick[1])
+                    gpu_name.remove("Chipset")
+                    gpu_name.remove("Model:")
+                    vram.remove("VRAM")
+                    vram.remove("(Dynamic,")
+                    vram.remove("Max):")
+
+
+                    gpu = ""
+                    vram = f"{vram[0]} {vram[1]}"
+
+                    for i,v in enumerate(gpu_name):
+                        if i == 0:
+                            gpu = v
+                        else:
+                            gpu = f"{gpu} {v}"
+
+                    gpu_name = f"{gpu} ({vram})" # Insert VRAM amount in string
+
+                    return gpu_name
+            elif sysname == "Linux":
+                try:
+                    subprocess.check_output("lspci | grep -c VGA", shell=True, encoding='utf-8')
+                    before_split = subprocess.check_output("lspci | grep VGA", shell=True, encoding='utf-8')
+                    gpu_name = subprocess.check_output("lspci | grep VGA", shell=True, encoding='utf-8').split()
+
+                    counter = 0
+                    stuffToRemove = ["VGA", ":", "compatible", "Corporation", "Integrated", "Graphics", "Controller", "(rev", "01)", "02)", "03)", "04)", "05)", "06)", "07)", "08)", "09)"] # I don't know how many rev ids there are
+
+                    for i,v in enumerate(stuffToRemove):
+                        for j in gpu_name:
+                            if v in j:
+                                gpu_name.remove(j)
+
+                    gpu = ""
+
+                    counter = 0
+                    for i in gpu_name:
+                        if counter == 0:
+                            gpu = i
+                        else:
+                            gpu = f"{gpu} {i}"
+                        counter += 1
+                        
+                    return gpu
+                except subprocess.CalledProcessError as err:
+                    return
+                
+            elif sysname == "Windows":
+                gpus_wmi = wmi.WMI().Win32_VideoController()
+                gpus = []
+                for gpu in gpus_wmi:
+                    gpus.append(gpu.Name)
+                return gpus
             
-            if options.get("showRAMSpeed"):
-                ramSpeed = subprocess.check_output("system_profiler SPMemoryDataType | Grep Speed", shell=True, encoding='utf-8').split("\n")[0].split()
-                ram = f"{size} GB ({ramSpeed[1]} {ramSpeed[2]})"
-                return ram
         
-        elif sysname == "Linux":
-            memory = subprocess.check_output("cat /proc/meminfo | grep MemTotal", shell=True, encoding='utf-8').split()
-            del memory[0]
-            memorySize = round(int(memory[0])/1000**2)
-            memoryMeasurement = "GB"
-            memory = f"{memorySize} {memoryMeasurement}"
-            return memory
+        # RAM    
+        case "RAM":
+                if sysname == "Darwin": 
+                    ramSticks = subprocess.check_output("system_profiler SPMemoryDataType | Grep Size", shell=True, encoding='utf-8').split("\n")
+                    size = 0
+            
+                    for stick in ramSticks:
+                        stick = stick.split()
+                        if stick == []:
+                            continue
+                        else:
+                            size += int(stick[1])
+            
+                    if options.get("showRAMSpeed"):
+                        ramSpeed = subprocess.check_output("system_profiler SPMemoryDataType | Grep Speed", shell=True, encoding='utf-8').split("\n")[0].split()
+                        ram = f"{size} GB ({ramSpeed[1]} {ramSpeed[2]})"
+                        return ram
         
-        elif sysname == "Windows":
-            sticks = wmi.WMI().Win32_PhysicalMemory()
-            memory = 0
+                elif sysname == "Linux":
+                    memory = subprocess.check_output("cat /proc/meminfo | grep MemTotal", shell=True, encoding='utf-8').split()
+                    del memory[0]
+                    memorySize = round(int(memory[0])/1000**2)
+                    memoryMeasurement = "GB"
+                    memory = f"{memorySize} {memoryMeasurement}"
+                    return memory
+        
+                elif sysname == "Windows":
+                    sticks = wmi.WMI().Win32_PhysicalMemory()
+                    memory = 0
             
-            for stick in sticks:
-                memory += int(stick.Capacity) / 1024**3
-            memory = str(memory).split(".")[0]
-            memory = f"{memory} GB"
+                    for stick in sticks:
+                        memory += int(stick.Capacity) / 1024**3
+                    memory = str(memory).split(".")[0]
+                    memory = f"{memory} GB"
             
-            if options.get("showRAMSpeed"):
-                speed = sticks[0].Speed
-                memory = f"{memory} ({speed} MHz)"
+                    if options.get("showRAMSpeed"):
+                        speed = sticks[0].Speed
+                        memory = f"{memory} ({speed} MHz)"
             
-            return memory
+                    return memory
             
-    
-    else:
-        return None
+        case _:
+            return None
