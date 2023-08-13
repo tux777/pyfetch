@@ -54,26 +54,30 @@ bold_colors = {
     "white": '\033[1;37m',
 }
 
-for information in info:
-    name = information.get("name")
-    info = information.get("info")
-    enabled = information.get("enabled")
+def main():
+    for information in info:
+        name = information.get("name")
+        info = information.get("info")
+        enabled = information.get("enabled")
 
-    bold_blue = bold_colors.get("blue")
-    reset = colors.get("reset")
+        bold_blue = bold_colors.get("blue")
+        reset = colors.get("reset")
 
-    if enabled == True:
-        if info == None: 
-            returnedInfo = getInfo(name, options)
-            if type(returnedInfo) is str:
-                print(f"{bold_blue}{name}: {reset}{returnedInfo}")
-            elif type(returnedInfo) is list:
-                if len(returnedInfo) == 1:
-                    print(f"{bold_blue}{name}: {reset}{returnedInfo[0]}")
-                elif len(returnedInfo) > 1:
-                    counter = 0
-                    for i in returnedInfo:
-                        counter += 1
-                        print(f"{bold_blue}{name} {counter}: {reset}{returnedInfo[counter-1]}")   
-        else:
-            print(f"{bold_blue}{name}: {reset}{info}") # If info is present within the info, just print the info instead rather than trying to fetch it in the getInfo function
+        if enabled == True:
+            if info == None: 
+                returnedInfo = getInfo(name, options)
+                if type(returnedInfo) is str:
+                    print(f"{bold_blue}{name}: {reset}{returnedInfo}")
+                elif type(returnedInfo) is list:
+                    if len(returnedInfo) == 1:
+                        print(f"{bold_blue}{name}: {reset}{returnedInfo[0]}")
+                    elif len(returnedInfo) > 1:
+                        counter = 0
+                        for i in returnedInfo:
+                            counter += 1
+                            print(f"{bold_blue}{name} {counter}: {reset}{returnedInfo[counter-1]}")   
+            else:
+                print(f"{bold_blue}{name}: {reset}{info}") # If info is present within the info, just print the info instead rather than trying to fetch it in the getInfo function    
+
+if __name__ == '__main__':
+    main()

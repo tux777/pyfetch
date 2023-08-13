@@ -223,3 +223,6 @@ def getInfo(name, options):
             
         case _:
             return None
+        
+if __name__ == '__main__':
+    print("Run fetch.py instead")
