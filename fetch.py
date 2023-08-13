@@ -57,14 +57,14 @@ bold_colors = {
 def main():
     for information in info:
         name = information.get("name")
-        info = information.get("info")
+        infoInInformation = information.get("info")
         enabled = information.get("enabled")
 
         bold_blue = bold_colors.get("blue")
         reset = colors.get("reset")
 
         if enabled == True:
-            if info == None: 
+            if infoInInformation == None: 
                 returnedInfo = getInfo(name, options)
                 if type(returnedInfo) is str:
                     print(f"{bold_blue}{name}: {reset}{returnedInfo}")
