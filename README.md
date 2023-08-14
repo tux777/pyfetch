@@ -16,3 +16,6 @@ My coding is also very messy and most likely very error prone. Please let me kno
 1. ```git clone https://github.com/tux777/pyfetch.git```
 2. ```cd pyfetch```
 3. ```python3 fetch.py```
+<!-- end of the list -->
+\
+*Note: pyfetch requires Python version 3.10 or newer*
