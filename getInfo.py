@@ -152,16 +152,12 @@ def getInfo(name, options):
                     gpu_name = subprocess.check_output("lspci | grep VGA", shell=True, encoding='utf-8').split()
 
                     counter = 0
-                    stuffToRemove = ["VGA", ":", "compatible", "Corporation", "Integrated", "Graphics", "Controller", "(rev", "01)", "02)", "03)", "04)", "05)", "06)", "07)", "08)", "09)"] # I don't know how many rev ids there are
+                    stuffToRemove = ["VGA", ":", "compatible", "Corporation", "Integrated", "Graphics", "Controller", "(rev", "01)", "02)", "03)", "04)", "05)", "06)", "07)", "08)", "09)", "a1)"] # I don't know how many rev ids there are
 
                     for i,v in enumerate(stuffToRemove):
                         for j in gpu_name:
                             if v in j:
                                 gpu_name.remove(j)
-
-                    
-
-                    gpu = gpu_name
                     
                     for i,v in enumerate(gpu_name):
                         if v.endswith("]"):
@@ -173,8 +169,16 @@ def getInfo(name, options):
                         else:
                             gpu = f"{gpu} {v}"
 
-                        
-                    return gpu.split("\n")
+                    gpu = gpu.split("\n")
+                    
+                    for i,v in enumerate(gpu):
+                        gpu[i] = gpu[i].strip()
+
+                        if v == '':
+                            del gpu[i]
+
+
+                    return gpu
                 except subprocess.CalledProcessError as err:
                     return
                 
