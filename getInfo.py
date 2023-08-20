@@ -1,6 +1,7 @@
 import platform
 import subprocess
-import os  
+import os 
+from math import floor
 
 sysname = platform.uname()[0] # Detetct OS
 
@@ -151,23 +152,34 @@ def getInfo(name, options):
                     gpu_name = subprocess.check_output("lspci | grep VGA", shell=True, encoding='utf-8').split()
 
                     counter = 0
-                    stuffToRemove = ["VGA", ":", "compatible", "Corporation", "Integrated", "Graphics", "Controller", "(rev", "01)", "02)", "03)", "04)", "05)", "06)", "07)", "08)", "09)"] # I don't know how many rev ids there are
+                    stuffToRemove = ["VGA", ":", "compatible", "Corporation", "Integrated", "Graphics", "Controller", "(rev"] #"(rev", "01)", "02)", "03)", "04)", "05)", "06)", "07)", "08)", "09)", "a1)"] # I don't know how many rev ids there are
 
                     for i,v in enumerate(stuffToRemove):
                         for j in gpu_name:
                             if v in j:
                                 gpu_name.remove(j)
+                    
+                    for i,v in enumerate(gpu_name):
+                        if v.endswith("]"):
+                            gpu_name[i] = f"{gpu_name[i]}\n"
+                    
+                    del gpu_name[-1] # Delete rev id
 
-                    gpu = ""
-
-                    counter = 0
-                    for i in gpu_name:
-                        if counter == 0:
-                            gpu = i
+                    for i,v in enumerate(gpu_name):
+                        if i == 0:
+                            gpu = v
                         else:
-                            gpu = f"{gpu} {i}"
-                        counter += 1
-                        
+                            gpu = f"{gpu} {v}"
+
+                    gpu = gpu.split("\n")
+                    
+                    for i,v in enumerate(gpu):
+                        gpu[i] = gpu[i].strip()
+
+                        if v == '':
+                            del gpu[i]
+
+
                     return gpu
                 except subprocess.CalledProcessError as err:
                     return
@@ -201,7 +213,7 @@ def getInfo(name, options):
                 elif sysname == "Linux":
                     memory = subprocess.check_output("cat /proc/meminfo | grep MemTotal", shell=True, encoding='utf-8').split()
                     del memory[0]
-                    memorySize = round(int(memory[0])/1000**2)
+                    memorySize = floor(int(memory[0])/1000**2)
                     memoryMeasurement = "GB"
                     memory = f"{memorySize} {memoryMeasurement}"
                     return memory
