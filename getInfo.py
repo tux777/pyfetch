@@ -45,7 +45,7 @@ def getInfo(name, options):
         # Kernel
         case "Kernel":
             if sysname == "Darwin" or sysname == "Linux":
-                kernel = subprocess.check_output("uname -r", shell=True, encoding='utf-8').strip()
+                kernel = subprocess.check_output("uname -or", shell=True, encoding='utf-8').strip()
                 return kernel
             elif sysname == "Windows":
                 kernel = subprocess.check_output("powershell \"Get-WmiObject Win32_OperatingSystem | Select-Object -ExpandProperty Version\"", shell=True, encoding='utf-8').strip()
