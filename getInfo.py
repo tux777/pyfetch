@@ -152,7 +152,7 @@ def getInfo(name, options):
                     gpu_name = subprocess.check_output("lspci | grep VGA", shell=True, encoding='utf-8').split()
 
                     counter = 0
-                    stuffToRemove = ["VGA", ":", "compatible", "Corporation", "Integrated", "Graphics", "Controller", "(rev", "01)", "02)", "03)", "04)", "05)", "06)", "07)", "08)", "09)", "a1)"] # I don't know how many rev ids there are
+                    stuffToRemove = ["VGA", ":", "compatible", "Corporation", "Integrated", "Graphics", "Controller", "(rev"] #"(rev", "01)", "02)", "03)", "04)", "05)", "06)", "07)", "08)", "09)", "a1)"] # I don't know how many rev ids there are
 
                     for i,v in enumerate(stuffToRemove):
                         for j in gpu_name:
@@ -162,6 +162,8 @@ def getInfo(name, options):
                     for i,v in enumerate(gpu_name):
                         if v.endswith("]"):
                             gpu_name[i] = f"{gpu_name[i]}\n"
+                    
+                    del gpu_name[-1] # Delete rev id
 
                     for i,v in enumerate(gpu_name):
                         if i == 0:
