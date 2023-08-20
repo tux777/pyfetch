@@ -1,6 +1,7 @@
 import platform
 import subprocess
-import os  
+import os 
+from math import floor
 
 sysname = platform.uname()[0] # Detetct OS
 
@@ -158,17 +159,22 @@ def getInfo(name, options):
                             if v in j:
                                 gpu_name.remove(j)
 
-                    gpu = ""
+                    
 
-                    counter = 0
-                    for i in gpu_name:
-                        if counter == 0:
-                            gpu = i
+                    gpu = gpu_name
+                    
+                    for i,v in enumerate(gpu_name):
+                        if v.endswith("]"):
+                            gpu_name[i] = f"{gpu_name[i]}\n"
+
+                    for i,v in enumerate(gpu_name):
+                        if i == 0:
+                            gpu = v
                         else:
-                            gpu = f"{gpu} {i}"
-                        counter += 1
+                            gpu = f"{gpu} {v}"
+
                         
-                    return gpu
+                    return gpu.split("\n")
                 except subprocess.CalledProcessError as err:
                     return
                 
@@ -201,7 +207,7 @@ def getInfo(name, options):
                 elif sysname == "Linux":
                     memory = subprocess.check_output("cat /proc/meminfo | grep MemTotal", shell=True, encoding='utf-8').split()
                     del memory[0]
-                    memorySize = round(int(memory[0])/1000**2)
+                    memorySize = floor(int(memory[0])/1000**2)
                     memoryMeasurement = "GB"
                     memory = f"{memorySize} {memoryMeasurement}"
                     return memory
