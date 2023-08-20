@@ -1,7 +1,7 @@
 import platform
 import subprocess
 import os 
-from math import floor
+from math import floor, ceil
 
 sysname = platform.uname()[0] # Detetct OS
 
@@ -213,7 +213,10 @@ def getInfo(name, options):
                 elif sysname == "Linux":
                     memory = subprocess.check_output("cat /proc/meminfo | grep MemTotal", shell=True, encoding='utf-8').split()
                     del memory[0]
-                    memorySize = floor(int(memory[0])/1000**2)
+                    if options.get("roundRAMUp"):
+                        memorySize = ceil(int(memory[0])/1000**2)
+                    if options.get("roundRAMDown") == True or options.get("roundRAMUp") == False or options.get("roundRAMUp") == None:
+                        memorySize = floor(int(memory[0])/1000**2)
                     memoryMeasurement = "GB"
                     memory = f"{memorySize} {memoryMeasurement}"
                     return memory
