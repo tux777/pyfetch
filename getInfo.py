@@ -213,21 +213,21 @@ def getInfo(name, options):
                 elif sysname == "Linux":
                     memory = subprocess.check_output("cat /proc/meminfo | grep MemTotal", shell=True, encoding='utf-8').split()
                     del memory[0]
-                    if options.get("roundRAMUp"):
-                        memorySize = ceil(int(memory[0])/1000**2)
-                    if options.get("roundRAMDown") == True or options.get("roundRAMUp") == False or options.get("roundRAMUp") == None:
-                        memorySize = floor(int(memory[0])/1000**2)
+                    memorySize = floor(int(memory[0])/1000**2)
                     memoryMeasurement = "GB"
                     memory = f"{memorySize} {memoryMeasurement}"
                     return memory
         
                 elif sysname == "Windows":
                     sticks = wmi.WMI().Win32_PhysicalMemory()
-                    memory = 0
-            
+                    memory: float = 0
+                    
+                    # Get all sticks
                     for stick in sticks:
-                        memory += int(stick.Capacity) / 1024**3
-                    memory = str(memory).split(".")[0]
+                        memory += float(stick.Capacity)
+                    
+                    # Convert bytes to megabytes
+                    memory = memory / (1024**3)
                     memory = f"{memory} GB"
             
                     if options.get("showRAMSpeed"):
