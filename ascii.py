@@ -22,7 +22,29 @@ f"""{fetch.colors.get("blue")}################  ################
 {fetch.colors.get("blue")}################  ################
 {fetch.colors.get("blue")}################  ################
 {fetch.colors.get("blue")}################  ################
-{fetch.colors.get("blue")}################  ################{fetch.colors.get("reset")}"""}
+{fetch.colors.get("blue")}################  ################{fetch.colors.get("reset")}""",
+"Arch Linux":
+f"""
+{fetch.colors.get("blue")}                   -`
+{fetch.colors.get("blue")}                  .o+`
+{fetch.colors.get("blue")}                 `ooo/
+{fetch.colors.get("blue")}                `+oooo:
+{fetch.colors.get("blue")}               `+oooooo:
+{fetch.colors.get("blue")}               -+oooooo+:
+{fetch.colors.get("blue")}             `/:-:++oooo+:
+{fetch.colors.get("blue")}            `/++++/+++++++:
+{fetch.colors.get("blue")}           `/++++++++++++++:
+{fetch.colors.get("blue")}          `/+++ooooooooooooo/`
+{fetch.colors.get("blue")}         ./ooosssso++osssssso+`
+{fetch.colors.get("blue")}        .oossssso-````/ossssss+`
+{fetch.colors.get("blue")}       -osssssso.      :ssssssso.
+{fetch.colors.get("blue")}      :osssssss/        osssso+++.
+{fetch.colors.get("blue")}     /ossssssss/        +ssssooo/-
+{fetch.colors.get("blue")}   `/ossssso+/:-        -:/+osssso+-
+{fetch.colors.get("blue")}  `+sso+:-`                 `.-/+oso:
+{fetch.colors.get("blue")} `++:.                           `-/+/
+{fetch.colors.get("blue")} .`                                 `/
+"""}
 
 def insertInfo(sysname, info):
     logo = None
