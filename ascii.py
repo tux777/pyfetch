@@ -1,4 +1,4 @@
-import fetch, platform
+import fetch, platform, os
 sysname = platform.uname()[0]
 if sysname == "Linux":
     try:
@@ -24,8 +24,7 @@ f"""{fetch.colors.get("blue")}################  ################
 {fetch.colors.get("blue")}################  ################
 {fetch.colors.get("blue")}################  ################{fetch.colors.get("reset")}""",
 "Arch Linux":
-f"""
-{fetch.colors.get("blue")}                   -`
+f"""{fetch.colors.get("blue")}                   -`
 {fetch.colors.get("blue")}                  .o+`
 {fetch.colors.get("blue")}                 `ooo/
 {fetch.colors.get("blue")}                `+oooo:
@@ -43,8 +42,7 @@ f"""
 {fetch.colors.get("blue")}   `/ossssso+/:-        -:/+osssso+-
 {fetch.colors.get("blue")}  `+sso+:-`                 `.-/+oso:
 {fetch.colors.get("blue")} `++:.                           `-/+/
-{fetch.colors.get("blue")} .`                                 `/
-"""}
+{fetch.colors.get("blue")} .`                                 `/{fetch.colors.get("reset")}"""}
 
 def insertInfo(sysname, info):
     logo = None
