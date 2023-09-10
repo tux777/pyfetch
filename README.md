@@ -12,11 +12,12 @@ It's missing most of the core and convinient features that neofetch offers, let 
 I haven't even listed them all but as you can see, pyfetch is not even near to being a replacement ~~if ever~~ of neofetch and neofetch is obviously the much better option.
 My coding is also very messy and most likely very error prone. Please let me know in issues if you find a problem with pyfetch. Feel free to contribute, would be glad if you could :)
 ## How do I download and run?
-1. ```pip install distro``` (required for linux and macos) (your linux distro might require you to install python packages with their package manager, not pip)
-1.1 ```pip install wmi``` (required for windows)
-2. ```git clone https://github.com/tux777/pyfetch.git```
-3. ```cd pyfetch```
-4. ```python3 fetch.py```
+1. Install required python packages
+    1.  ```pip install distro``` (required for linux and macos) (your linux distro might require you to install python packages with their package manager, not pip)
+    2.   ```pip install wmi``` (required for windows)
+3. ```git clone https://github.com/tux777/pyfetch.git```
+4. ```cd pyfetch```
+5. ```python3 fetch.py```
 <!-- end of the list -->
 \
 *Note: pyfetch requires Python version 3.10 or newer*
