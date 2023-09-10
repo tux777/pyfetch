@@ -18,7 +18,7 @@ elif sysname == "Windows":
         import wmi
     except ModuleNotFoundError as err:
         print(f"Module '{err.name}' was not found. Please install it with pip")
-        os._exit(0) 
+        os._exit(0)
 
 def getInfo(name, options):
     macosWMs = ["[c]hunkwm", "[K]wm", "[y]abai", "[A]methyst", "[S]pectacle", "[R]ectangle"]
@@ -30,10 +30,8 @@ def getInfo(name, options):
         
         # Operating System
         case "Operating System":
-            if sysname == "Darwin" or sysname == "Linux":
+            if sysname == "Linux":
                 osName = distro.name()
-                if osName == "Darwin":
-                    osName = "MacOS"
             if sysname == "Windows":
                 return wmi.WMI().Win32_OperatingSystem()[0].Caption
             if sysname == "Darwin":
