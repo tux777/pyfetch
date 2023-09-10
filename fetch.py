@@ -17,7 +17,7 @@ import platform
 # showRAMSpeed | Shows ram speed in MHz
 # showLogoASCII | Shows OS ASCII logo
 
-options = { "showShellPath": False, "showRAMSpeed": True, "showLogoASCII": True } # DO NOT REMOVE! ONLY REMOVE THE OPTIONS INSIDE
+options = { "showShellPath": False, "showRAMSpeed": True } # DO NOT REMOVE! ONLY REMOVE THE OPTIONS INSIDE
 
 # Format is explanatory
 # For clarification, info can either be None or have custom info that is persistent no matter what.
