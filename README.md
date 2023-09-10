@@ -3,7 +3,6 @@
 pyfetch is a python alternative to the well known fetch program, neofetch! But pyfetch is not near to being mature **at all** and is not to be used as a official replacement. Just a fun little project of mine.
 It's missing most of the core and convinient features that neofetch offers, let me list some of them.
 #### What does pyfetch not have compared to neofetch?
-* pyfetch does not have ascii logos to print in the terminal
 * pyfetch does not print images to your terminal
 * pyfetch does not offer custom themes or the creation of custom themes to print to the terminal
 * pyfetch does not support nearly any and as much operating systems as neofetch does **(Only supports Windows, MacOS and some Mainstream Linux distros)**
