@@ -1,7 +1,7 @@
 import platform
 import subprocess
 import os 
-from math import floor
+from math import floor, ceil
 
 sysname = platform.uname()[0] # Detetct OS
 
@@ -18,7 +18,7 @@ elif sysname == "Windows":
         import wmi
     except ModuleNotFoundError as err:
         print(f"Module '{err.name}' was not found. Please install it with pip")
-        os._exit(0) 
+        os._exit(0)
 
 def getInfo(name, options):
     macosWMs = ["[c]hunkwm", "[K]wm", "[y]abai", "[A]methyst", "[S]pectacle", "[R]ectangle"]
@@ -30,10 +30,8 @@ def getInfo(name, options):
         
         # Operating System
         case "Operating System":
-            if sysname == "Darwin" or sysname == "Linux":
+            if sysname == "Linux":
                 osName = distro.name()
-                if osName == "Darwin":
-                    osName = "MacOS"
             if sysname == "Windows":
                 return wmi.WMI().Win32_OperatingSystem()[0].Caption
             if sysname == "Darwin":
@@ -45,7 +43,7 @@ def getInfo(name, options):
         # Kernel
         case "Kernel":
             if sysname == "Darwin" or sysname == "Linux":
-                kernel = subprocess.check_output("uname -r", shell=True, encoding='utf-8').strip()
+                kernel = subprocess.check_output("uname -or", shell=True, encoding='utf-8').strip()
                 return kernel
             elif sysname == "Windows":
                 kernel = subprocess.check_output("powershell \"Get-WmiObject Win32_OperatingSystem | Select-Object -ExpandProperty Version\"", shell=True, encoding='utf-8').strip()
@@ -220,11 +218,14 @@ def getInfo(name, options):
         
                 elif sysname == "Windows":
                     sticks = wmi.WMI().Win32_PhysicalMemory()
-                    memory = 0
-            
+                    memory: float = 0
+                    
+                    # Get all sticks
                     for stick in sticks:
-                        memory += int(stick.Capacity) / 1024**3
-                    memory = str(memory).split(".")[0]
+                        memory += float(stick.Capacity)
+                    
+                    # Convert bytes to megabytes
+                    memory = memory / (1024**3)
                     memory = f"{memory} GB"
             
                     if options.get("showRAMSpeed"):

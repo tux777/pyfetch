@@ -2,6 +2,8 @@
 # W.I.P.
 
 from getInfo import getInfo
+import ascii
+import platform
 
 # Format is "option-name": value, ...
 # For an example: "showShellPath": True
@@ -13,6 +15,7 @@ from getInfo import getInfo
 
 # showShellPath | Shows the full path to your shell rather than just displaying its name.
 # showRAMSpeed | Shows ram speed in MHz
+# showLogoASCII | Shows OS ASCII logo
 
 options = { "showShellPath": False, "showRAMSpeed": True } # DO NOT REMOVE! ONLY REMOVE THE OPTIONS INSIDE
 
@@ -55,6 +58,8 @@ bold_colors = {
 }
 
 def main():
+    res: list = []
+
     for information in info:
         name = information.get("name")
         infoInInformation = information.get("info")
@@ -64,20 +69,43 @@ def main():
         reset = colors.get("reset")
 
         if enabled == True:
-            if infoInInformation == None: 
-                returnedInfo = getInfo(name, options)
-                if type(returnedInfo) is str:
-                    print(f"{bold_blue}{name}: {reset}{returnedInfo}")
-                elif type(returnedInfo) is list:
-                    if len(returnedInfo) == 1:
-                        print(f"{bold_blue}{name}: {reset}{returnedInfo[0]}")
-                    elif len(returnedInfo) > 1:
-                        counter = 0
-                        for i in returnedInfo:
-                            counter += 1
-                            print(f"{bold_blue}{name} {counter}: {reset}{returnedInfo[counter-1]}")   
+            if options.get("showLogoASCII") == True:
+                    if infoInInformation == None: 
+                        returnedInfo = getInfo(name, options)
+                        if type(returnedInfo) is str:
+                            res.append(f"{bold_blue}{name}: {reset}{returnedInfo}")
+                        elif type(returnedInfo) is list:
+                            if len(returnedInfo) == 1:
+                                res.append(f"{bold_blue}{name}: {reset}{returnedInfo[0]}")
+                            elif len(returnedInfo) > 1:
+                                counter = 0
+                                for i in returnedInfo:
+                                    counter += 1
+                                    res.append(f"{bold_blue}{name} {counter}: {reset}{returnedInfo[counter-1]}")   
+                    else:
+                        res.append(f"{bold_blue}{name}: {reset}{info}") # If info is present within the info, just print the info instead rather than trying to fetch it in the getInfo function  
+
             else:
-                print(f"{bold_blue}{name}: {reset}{info}") # If info is present within the info, just print the info instead rather than trying to fetch it in the getInfo function    
+                if infoInInformation == None: 
+                    returnedInfo = getInfo(name, options)
+                    if type(returnedInfo) is str:
+                        print(f"{bold_blue}{name}: {reset}{returnedInfo}")
+                    elif type(returnedInfo) is list:
+                        if len(returnedInfo) == 1:
+                            print(f"{bold_blue}{name}: {reset}{returnedInfo[0]}")
+                        elif len(returnedInfo) > 1:
+                            counter = 0
+                            for i in returnedInfo:
+                                counter += 1
+                                print(f"{bold_blue}{name} {counter}: {reset}{returnedInfo[counter-1]}")   
+                else:
+                    print(f"{bold_blue}{name}: {reset}{info}") # If info is present within the info, just print the info instead rather than trying to fetch it in the getInfo function    
+
+    if options.get("showLogoASCII"):
+        logoASCII = ascii.insertInfo(platform.uname()[0], res)
+        for i in logoASCII:
+            print(i)
+        
 
 if __name__ == '__main__':
     main()
