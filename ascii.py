@@ -42,7 +42,21 @@ f"""{fetch.colors.get("blue")}                   -`
 {fetch.colors.get("blue")}   `/ossssso+/:-        -:/+osssso+-
 {fetch.colors.get("blue")}  `+sso+:-`                 `.-/+oso:
 {fetch.colors.get("blue")} `++:.                           `-/+/
-{fetch.colors.get("blue")} .`                                 `/{fetch.colors.get("reset")}"""}
+{fetch.colors.get("blue")} .`                                 `/{fetch.colors.get("reset")}""",
+"Linux":
+f"""{fetch.colors.get("black")}        #####
+{fetch.colors.get("black")}       #######
+{fetch.colors.get("black")}       ##{fetch.colors.get("white")}O{fetch.colors.get("black")}#{fetch.colors.get("white")}O{fetch.colors.get("black")}##
+{fetch.colors.get("black")}       #{fetch.colors.get("yellow")}#####{fetch.colors.get("black")}#
+{fetch.colors.get("black")}     ##{fetch.colors.get("white")}##{fetch.colors.get("yellow")}###{fetch.colors.get("white")}##{fetch.colors.get("black")}##
+{fetch.colors.get("black")}    ##{fetch.colors.get("white")}##########{fetch.colors.get("black")}##
+{fetch.colors.get("black")}   #{fetch.colors.get("white")}############{fetch.colors.get("black")}##
+{fetch.colors.get("black")}   #{fetch.colors.get("white")}#############{fetch.colors.get("black")}##
+{fetch.colors.get("black")}  #{fetch.colors.get("white")}#############{fetch.colors.get("black")}###
+{fetch.colors.get("yellow")}##{fetch.colors.get("black")}#{fetch.colors.get("white")}###############{fetch.colors.get("black")}##{fetch.colors.get("yellow")}#
+{fetch.colors.get("yellow")}#######{fetch.colors.get("black")}#{fetch.colors.get("white")}######{fetch.colors.get("yellow")}#######
+{fetch.colors.get("yellow")}  #####{fetch.colors.get("black")}#######{fetch.colors.get("yellow")}#####{fetch.colors.get("reset")}
+"""}
 
 def insertInfo(sysname, info):
     logo = None
@@ -56,7 +70,7 @@ def insertInfo(sysname, info):
             logo = ascii_art.get("Linux")
     
     logo_split = logo.split("\n")
-    length = max(len(part) for part in logo_split)+5
+    length = max(len(part) for part in logo_split)
 
     padded_logo = [part.ljust(length) for part in logo_split]
     
