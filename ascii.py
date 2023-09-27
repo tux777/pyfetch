@@ -42,7 +42,25 @@ f"""{fetch.colors.get("blue")}                   -`
 {fetch.colors.get("blue")}   `/ossssso+/:-        -:/+osssso+-
 {fetch.colors.get("blue")}  `+sso+:-`                 `.-/+oso:
 {fetch.colors.get("blue")} `++:.                           `-/+/
-{fetch.colors.get("blue")} .`                                 `/{fetch.colors.get("reset")}"""}
+{fetch.colors.get("blue")} .`                                 `/{fetch.colors.get("reset")}""",
+"MacOS":
+f"""{fetch.colors.get("green")}                    'c.
+{fetch.colors.get("green")}                  ,xNMM.
+{fetch.colors.get("green")}                .OMMMMo
+{fetch.colors.get("green")}                OMMM0,
+{fetch.colors.get("green")}      .;loddo:' loolloddol;.
+{fetch.colors.get("green")}    cKMMMMMMMMMMNWMMMMMMMMMM0:
+{fetch.colors.get("yellow")}  .KMMMMMMMMMMMMMMMMMMMMMMMWd.
+{fetch.colors.get("yellow")}  XMMMMMMMMMMMMMMMMMMMMMMMX.
+{fetch.colors.get("red")} ;MMMMMMMMMMMMMMMMMMMMMMMM:
+{fetch.colors.get("red")} :MMMMMMMMMMMMMMMMMMMMMMMM:
+{fetch.colors.get("red")} .MMMMMMMMMMMMMMMMMMMMMMMMX.
+{fetch.colors.get("red")}  kMMMMMMMMMMMMMMMMMMMMMMMMWd.
+{fetch.bold_colors.get("red")}  .XMMMMMMMMMMMMMMMMMMMMMMMMMMk
+{fetch.bold_colors.get("red")}   .XMMMMMMMMMMMMMMMMMMMMMMMMK.
+{fetch.colors.get("blue")}     kMMMMMMMMMMMMMMMMMMMMMMd
+{fetch.colors.get("blue")}      ;KMMMMMMMWXXWMMMMMMMk.
+{fetch.colors.get("blue")}        .cooc,.    .,coo:.{fetch.colors.get("reset")}"""}
 
 def insertInfo(sysname, info):
     logo = None

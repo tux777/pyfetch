@@ -35,15 +35,18 @@ def getInfo(name, options):
             if sysname == "Windows":
                 return wmi.WMI().Win32_OperatingSystem()[0].Caption
             if sysname == "Darwin":
-                return f"{osName} {platform.mac_ver()[0]}"
+                return f"MacOS {platform.mac_ver()[0]}"
             else:
-                return f"{osName}"
+                return f"{sysname}"
         
         
         # Kernel
         case "Kernel":
-            if sysname == "Darwin" or sysname == "Linux":
+            if sysname == "Linux":
                 kernel = subprocess.check_output("uname -or", shell=True, encoding='utf-8').strip()
+                return kernel
+            elif sysname == "Darwin":
+                kernel = subprocess.check_output("uname -sr", shell=True, encoding='utf-8').strip()
                 return kernel
             elif sysname == "Windows":
                 kernel = subprocess.check_output("powershell \"Get-WmiObject Win32_OperatingSystem | Select-Object -ExpandProperty Version\"", shell=True, encoding='utf-8').strip()
